@@ -1,13 +1,10 @@
 package com.example.assisto.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,8 +26,8 @@ data class SeekerNavItem(val route: String, val label: String, val icon: ImageVe
 
 private val seekerNavItems = listOf(
     SeekerNavItem(SeekerTab.HOME, "Home", Icons.Default.Home),
-    SeekerNavItem(SeekerTab.REQUESTS, "Requests", Icons.Default.List),
-    SeekerNavItem(SeekerTab.MESSAGES, "Messages", Icons.Default.Chat),
+    SeekerNavItem(SeekerTab.REQUESTS, "Requests", Icons.AutoMirrored.Filled.List),
+    SeekerNavItem(SeekerTab.MESSAGES, "Messages", Icons.AutoMirrored.Filled.Chat),
     SeekerNavItem(SeekerTab.PROFILE, "Profile", Icons.Default.Person),
 )
 
@@ -44,22 +41,17 @@ fun SeekerMainScreen(
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                seekerNavItems.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentRoute == item.route,
-                        onClick = {
-                            navController.navigate(item.route) {
-                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) },
-                    )
-                }
-            }
+            AssistoBottomNavBar(
+                items = seekerNavItems.map { BottomNavEntry(it.route, it.label, it.icon) },
+                currentRoute = currentRoute,
+                onSelect = { route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+            )
         },
     ) { padding ->
         NavHost(

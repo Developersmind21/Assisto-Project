@@ -23,13 +23,15 @@ private val LightColorScheme = lightColorScheme(
     onSecondary = SurfaceWhite,
     tertiary = AccentRed,
     onTertiary = SurfaceWhite,
-    background = BackgroundGray,
+    background = BgPage,
     onBackground = TextPrimary,
-    surface = SurfaceWhite,
+    surface = BgSurface,
     onSurface = TextPrimary,
-    surfaceVariant = BackgroundGray,
+    surfaceVariant = Gray200,
     onSurfaceVariant = TextSecondary,
-    error = AccentRed,
+    outline = Gray300,
+    outlineVariant = Gray200,
+    error = ErrorRed,
     onError = SurfaceWhite,
 )
 
@@ -46,17 +48,20 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = DarkTextPrimary,
     surface = DarkSurface,
     onSurface = DarkTextPrimary,
-    surfaceVariant = DarkSurface,
+    surfaceVariant = DarkElevated,
     onSurfaceVariant = DarkTextSecondary,
-    error = AccentRed,
+    outline = DarkTextSecondary,
+    outlineVariant = DarkElevated,
+    error = ErrorRed,
     onError = DarkTextPrimary,
 )
 
 val AssistoShapes = Shapes(
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(12.dp),
-    large = RoundedCornerShape(16.dp),
-    extraLarge = RoundedCornerShape(24.dp),
+    extraSmall = RoundedCornerShape(AssistoTokens.Radius.extraSmall),
+    small = RoundedCornerShape(AssistoTokens.Radius.small),
+    medium = RoundedCornerShape(AssistoTokens.Radius.medium),
+    large = RoundedCornerShape(AssistoTokens.Radius.large),
+    extraLarge = RoundedCornerShape(AssistoTokens.Radius.extraLarge),
 )
 
 @Composable

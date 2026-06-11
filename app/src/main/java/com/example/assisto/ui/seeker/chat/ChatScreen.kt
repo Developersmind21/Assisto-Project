@@ -41,9 +41,13 @@ fun ChatScreen(onBack: () -> Unit, viewModel: ChatViewModel = assistoViewModel()
 
     Scaffold(
         topBar = {
-            AssistoTopBar("Marcus Rivera", onBackClick = onBack, actions = {
-                TopBarActionIcon(Icons.Default.Call, "Call") {}
-            })
+            AssistoTopBar(
+                "Marcus Rivera",
+                onBackClick = onBack,
+                actions = listOf(
+                    com.example.assisto.ui.components.TopBarAction(Icons.Default.Call, "Call") {},
+                ),
+            )
         },
     ) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {

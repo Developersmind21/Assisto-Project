@@ -10,15 +10,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,26 +29,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.Inbox
+import com.example.assisto.ui.theme.AssistoTokens
 
+/**
+ * Animated gradient skeleton sweeping Gray200 → Gray100 → Gray200 left-to-right.
+ */
 @Composable
 fun ShimmerBox(
     modifier: Modifier = Modifier,
-    height: Int = 80,
+    height: Dp = 80.dp,
+    shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(AssistoTokens.Radius.large),
 ) {
     val transition = rememberInfiniteTransition(label = "shimmer")
     val offset by transition.animateFloat(
-        initialValue = 0f,
+        initialValue = -300f,
         targetValue = 1000f,
         animationSpec = infiniteRepeatable(tween(1200, easing = LinearEasing), RepeatMode.Restart),
         label = "shimmerOffset",
     )
     val brush = Brush.linearGradient(
         colors = listOf(
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
+            AssistoTokens.Colors.Gray200,
+            AssistoTokens.Colors.Gray100,
+            AssistoTokens.Colors.Gray200,
         ),
         start = Offset(offset, 0f),
         end = Offset(offset + 300f, 0f),
@@ -56,16 +66,52 @@ fun ShimmerBox(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(height.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .height(height)
+            .clip(shape)
             .background(brush),
     )
 }
 
 @Composable
+private fun ShimmerBlock(width: Dp, height: Dp, shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(AssistoTokens.Radius.small)) {
+    ShimmerBox(modifier = Modifier.width(width), height = height, shape = shape)
+}
+
+/** Provider list skeleton: avatar + two text lines + chips. */
+@Composable
+fun ProviderCardShimmer(modifier: Modifier = Modifier) {
+    AssistoCard(modifier = modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AssistoTokens.Spacing.MD)) {
+            ShimmerBox(modifier = Modifier.size(AssistoTokens.Dimens.AvatarMD), height = AssistoTokens.Dimens.AvatarMD, shape = CircleShape)
+            Column(verticalArrangement = Arrangement.spacedBy(AssistoTokens.Spacing.SM)) {
+                ShimmerBlock(width = 160.dp, height = 16.dp)
+                ShimmerBlock(width = 100.dp, height = 12.dp)
+                ShimmerBlock(width = 200.dp, height = 12.dp)
+            }
+        }
+    }
+}
+
+/** Request list skeleton. */
+@Composable
+fun RequestCardShimmer(modifier: Modifier = Modifier) {
+    AssistoCard(modifier = modifier) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(AssistoTokens.Spacing.MD)) {
+            ShimmerBox(modifier = Modifier.size(AssistoTokens.Dimens.AvatarSM), height = AssistoTokens.Dimens.AvatarSM, shape = RoundedCornerShape(AssistoTokens.Radius.medium))
+            Column(verticalArrangement = Arrangement.spacedBy(AssistoTokens.Spacing.SM)) {
+                ShimmerBlock(width = 180.dp, height = 16.dp)
+                ShimmerBlock(width = 120.dp, height = 12.dp)
+            }
+        }
+        Spacer(Modifier.height(AssistoTokens.Spacing.SM))
+        ShimmerBlock(width = 240.dp, height = 12.dp)
+    }
+}
+
+@Composable
 fun LoadingShimmerList(count: Int = 3) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        repeat(count) { ShimmerBox() }
+    Column(verticalArrangement = Arrangement.spacedBy(AssistoTokens.Spacing.MD)) {
+        repeat(count) { RequestCardShimmer() }
     }
 }
 
@@ -76,27 +122,28 @@ fun EmptyStateView(
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    icon: ImageVector = Icons.Outlined.Inbox,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(32.dp),
+            .padding(AssistoTokens.Spacing.XL),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
-            Icons.Outlined.SearchOff,
+            icon,
             contentDescription = null,
             modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = AssistoTokens.Colors.Gray400,
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(message, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant, textAlign = TextAlign.Center)
+        Spacer(modifier = Modifier.height(AssistoTokens.Spacing.MD))
+        Text(title, style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center, color = AssistoTokens.Colors.TextPrimary)
+        Spacer(modifier = Modifier.height(AssistoTokens.Spacing.SM))
+        Text(message, style = MaterialTheme.typography.bodyMedium, color = AssistoTokens.Colors.TextSecondary, textAlign = TextAlign.Center)
         if (actionLabel != null && onAction != null) {
-            Spacer(modifier = Modifier.height(24.dp))
-            AssistoButton(text = actionLabel, onClick = onAction, fillMaxWidth = false)
+            Spacer(modifier = Modifier.height(AssistoTokens.Spacing.LG))
+            AssistoPrimaryButton(text = actionLabel, onClick = onAction, fillMaxWidth = false)
         }
     }
 }
@@ -110,13 +157,13 @@ fun ErrorStateView(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(32.dp),
+            .padding(AssistoTokens.Spacing.XL),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(Icons.Outlined.ErrorOutline, contentDescription = null, modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.error)
-        Spacer(modifier = Modifier.height(12.dp))
-        Text(message, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
-        Spacer(modifier = Modifier.height(16.dp))
-        AssistoButton(text = "Retry", onClick = onRetry, fillMaxWidth = false)
+        Spacer(modifier = Modifier.height(AssistoTokens.Spacing.SM))
+        Text(message, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center, color = AssistoTokens.Colors.TextPrimary)
+        Spacer(modifier = Modifier.height(AssistoTokens.Spacing.MD))
+        AssistoSecondaryButton(text = "Retry", onClick = onRetry, fillMaxWidth = false)
     }
 }

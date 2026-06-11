@@ -17,7 +17,7 @@ class ActiveJobViewModel constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val jobId: String = savedStateHandle.get<String>("jobId") ?: "job1"
+    val jobId: String = savedStateHandle.get<String>("requestId") ?: "job1"
     private val _job = MutableStateFlow<ActiveJob?>(null)
     val job: StateFlow<ActiveJob?> = _job.asStateFlow()
 

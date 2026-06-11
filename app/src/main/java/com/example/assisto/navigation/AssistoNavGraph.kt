@@ -1,5 +1,10 @@
 package com.example.assisto.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,7 +25,6 @@ import com.example.assisto.ui.onboarding.OnboardingViewModel
 import com.example.assisto.ui.onboarding.ProviderProfileSetupScreen
 import com.example.assisto.ui.onboarding.RoleSelectionScreen
 import com.example.assisto.ui.onboarding.SeekerProfileSetupScreen
-import com.example.assisto.ui.onboarding.WelcomeScreen
 import com.example.assisto.ui.provider.activejob.ActiveJobScreen
 import com.example.assisto.ui.seeker.chat.ChatScreen
 import com.example.assisto.ui.seeker.matching.ProviderMatchingScreen
@@ -38,10 +42,15 @@ fun AssistoNavGraph(
 ) {
     val profile by onboardingViewModel.profile.collectAsState()
 
-    NavHost(navController = navController, startDestination = AssistoRoutes.WELCOME) {
-        composable(AssistoRoutes.WELCOME) {
-            WelcomeScreen(onGetStarted = { navController.navigate(AssistoRoutes.ROLE_SELECTION) })
-        }
+    val tween = tween<Float>(280)
+    NavHost(
+        navController = navController,
+        startDestination = Routes.RoleSelection.route,
+        enterTransition = { slideInHorizontally(initialOffsetX = { it }) + fadeIn(tween) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) + fadeOut(tween) },
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) + fadeIn(tween) },
+        popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) + fadeOut(tween) },
+    ) {
         composable(AssistoRoutes.ROLE_SELECTION) {
             RoleSelectionScreen(
                 viewModel = onboardingViewModel,
@@ -60,7 +69,7 @@ fun AssistoNavGraph(
                 onComplete = {
                     onboardingViewModel.completeSeekerOnboarding()
                     navController.navigate(AssistoRoutes.SEEKER_MAIN) {
-                        popUpTo(AssistoRoutes.WELCOME) { inclusive = true }
+                        popUpTo(AssistoRoutes.ROLE_SELECTION) { inclusive = true }
                     }
                 },
             )
@@ -71,7 +80,7 @@ fun AssistoNavGraph(
                 onComplete = {
                     onboardingViewModel.completeProviderOnboarding()
                     navController.navigate(AssistoRoutes.PROVIDER_MAIN) {
-                        popUpTo(AssistoRoutes.WELCOME) { inclusive = true }
+                        popUpTo(AssistoRoutes.ROLE_SELECTION) { inclusive = true }
                     }
                 },
             )
@@ -139,7 +148,7 @@ fun AssistoNavGraph(
         }
         composable(
             route = AssistoRoutes.CHAT,
-            arguments = listOf(navArgument("conversationId") { type = NavType.StringType }),
+            arguments = listOf(navArgument("threadId") { type = NavType.StringType }),
         ) {
             ChatScreen(onBack = { navController.popBackStack() })
         }
@@ -163,7 +172,7 @@ fun AssistoNavGraph(
         }
         composable(
             route = AssistoRoutes.ACTIVE_JOB,
-            arguments = listOf(navArgument("jobId") { type = NavType.StringType }),
+            arguments = listOf(navArgument("requestId") { type = NavType.StringType }),
         ) {
             ActiveJobScreen(
                 onBack = { navController.popBackStack() },

@@ -15,7 +15,7 @@ class ChatViewModel constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
-    val conversationId: String = savedStateHandle.get<String>("conversationId") ?: "conv1"
+    val conversationId: String = savedStateHandle.get<String>("threadId") ?: "conv1"
     private val _messages = MutableStateFlow<List<ChatMessage>>(emptyList())
     val messages: StateFlow<List<ChatMessage>> = _messages.asStateFlow()
     private val _input = MutableStateFlow("")

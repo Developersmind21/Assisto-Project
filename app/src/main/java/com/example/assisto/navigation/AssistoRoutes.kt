@@ -1,53 +1,57 @@
 package com.example.assisto.navigation
 
+/**
+ * Thin helper surface over [Routes]. All values resolve to the canonical
+ * spec route strings defined in [Routes]; builders forward to the typed
+ * [Routes] builders.
+ */
 object AssistoRoutes {
     const val WELCOME = "welcome"
-    const val ROLE_SELECTION = "role_selection"
-    const val SEEKER_PROFILE_SETUP = "seeker_profile_setup"
-    const val PROVIDER_PROFILE_SETUP = "provider_profile_setup"
-    const val SEEKER_MAIN = "seeker_main"
-    const val PROVIDER_MAIN = "provider_main"
+    val ROLE_SELECTION = Routes.RoleSelection.route
+    val SEEKER_PROFILE_SETUP = Routes.SeekerSetup.route
+    val PROVIDER_PROFILE_SETUP = Routes.ProviderSetup.route
+    val SEEKER_MAIN = Routes.SeekerMain.route
+    val PROVIDER_MAIN = Routes.ProviderMain.route
 
-    const val SERVICE_REQUEST = "service_request?category={category}"
-    const val SERVICE_REQUEST_BASE = "service_request"
-    fun serviceRequest(category: String? = null) =
-        if (category != null) "service_request?category=$category" else SERVICE_REQUEST_BASE
+    val SERVICE_REQUEST = Routes.CreateRequest.routeWithArg
+    val SERVICE_REQUEST_BASE = Routes.CreateRequest.route
+    fun serviceRequest(category: String? = null) = Routes.CreateRequest.build(category)
 
-    const val PROVIDER_MATCHING = "provider_matching/{requestId}"
-    fun providerMatching(requestId: String) = "provider_matching/$requestId"
+    val PROVIDER_MATCHING = Routes.ProviderMatching.route
+    fun providerMatching(requestId: String) = Routes.ProviderMatching.build(requestId)
 
-    const val PROVIDER_DETAIL = "provider_detail/{providerId}"
-    fun providerDetail(providerId: String) = "provider_detail/$providerId"
+    val PROVIDER_DETAIL = Routes.ProviderProfile.route
+    fun providerDetail(providerId: String) = Routes.ProviderProfile.build(providerId)
 
-    const val REQUEST_TRACKING = "request_tracking/{requestId}"
-    fun requestTracking(requestId: String) = "request_tracking/$requestId"
+    val REQUEST_TRACKING = Routes.RequestTracking.route
+    fun requestTracking(requestId: String) = Routes.RequestTracking.build(requestId)
 
-    const val CHAT = "chat/{conversationId}"
-    fun chat(conversationId: String) = "chat/$conversationId"
+    val CHAT = Routes.Chat.route
+    fun chat(threadId: String) = Routes.Chat.build(threadId)
 
-    const val JOB_COMPLETION = "job_completion/{requestId}"
-    fun jobCompletion(requestId: String) = "job_completion/$requestId"
+    val JOB_COMPLETION = Routes.Payment.route
+    fun jobCompletion(requestId: String) = Routes.Payment.build(requestId)
 
-    const val RATING = "rating/{requestId}"
-    fun rating(requestId: String) = "rating/$requestId"
+    val RATING = Routes.RateProvider.route
+    fun rating(requestId: String) = Routes.RateProvider.build(requestId)
 
-    const val ACTIVE_JOB = "active_job/{jobId}"
-    fun activeJob(jobId: String) = "active_job/$jobId"
+    val ACTIVE_JOB = Routes.ProviderActiveJob.route
+    fun activeJob(requestId: String) = Routes.ProviderActiveJob.build(requestId)
 
-    const val PROVIDER_PROFILE_EDIT = "provider_profile_edit"
-    const val SOS_CONFIRMATION = "sos_confirmation"
+    val PROVIDER_PROFILE_EDIT = Routes.ProviderProfileEdit.route
+    val SOS_CONFIRMATION = Routes.SosConfirmation.route
 }
 
 object SeekerTab {
-    const val HOME = "seeker_tab_home"
-    const val REQUESTS = "seeker_tab_requests"
-    const val MESSAGES = "seeker_tab_messages"
-    const val PROFILE = "seeker_tab_profile"
+    val HOME = Routes.SeekerHome.route
+    val REQUESTS = Routes.MyRequests.route
+    val MESSAGES = Routes.SeekerMessages.route
+    val PROFILE = Routes.SeekerProfile.route
 }
 
 object ProviderTab {
-    const val DASHBOARD = "provider_tab_dashboard"
-    const val JOBS = "provider_tab_jobs"
-    const val EARNINGS = "provider_tab_earnings"
-    const val PROFILE = "provider_tab_profile"
+    val DASHBOARD = Routes.ProviderHome.route
+    val JOBS = Routes.ProviderJobs.route
+    val EARNINGS = Routes.ProviderEarnings.route
+    val PROFILE = Routes.ProviderProfileEdit.route
 }
