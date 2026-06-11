@@ -82,9 +82,12 @@ fun ProviderDashboardScreen(
 
     Scaffold(
         topBar = {
-            AssistoTopBar("Assisto Provider", actions = {
-                TopBarActionIcon(Icons.Default.AttachMoney, "Earnings", onEarningsClick)
-            })
+            AssistoTopBar(
+                "Assisto Provider",
+                actions = listOf(
+                    com.example.assisto.ui.components.TopBarAction(Icons.Default.AttachMoney, "Earnings", onEarningsClick),
+                ),
+            )
         },
     ) { padding ->
         Column(

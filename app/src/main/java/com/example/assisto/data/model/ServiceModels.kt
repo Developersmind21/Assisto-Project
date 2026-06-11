@@ -1,11 +1,11 @@
 package com.example.assisto.data.model
 
 enum class ServiceCategory(val displayName: String, val accentColorHex: Long) {
-    HOME("Home Services", 0xFF1565C0),
-    AUTO("Auto & Mechanical", 0xFF6A1B9A),
-    TECH("Tech Support", 0xFF00838F),
-    EDUCATION("Education/Tutoring", 0xFFEF6C00),
-    PERSONAL("Personal Assistance", 0xFF2E7D32),
+    HOME("Home Services", 0xFFFF6B35),
+    AUTO("Auto & Mechanical", 0xFF2E75B6),
+    TECH("Tech Support", 0xFF7B2FBE),
+    EDUCATION("Education & Tutoring", 0xFF2E7D32),
+    PERSONAL("Personal Assistance", 0xFFC2185B),
 }
 
 enum class RequestStatus {

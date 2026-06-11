@@ -1,13 +1,10 @@
 package com.example.assisto.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Work
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.foundation.layout.padding
@@ -30,7 +27,7 @@ data class ProviderNavItem(val route: String, val label: String, val icon: Image
 private val providerNavItems = listOf(
     ProviderNavItem(ProviderTab.DASHBOARD, "Dashboard", Icons.Default.Dashboard),
     ProviderNavItem(ProviderTab.JOBS, "Jobs", Icons.Default.Work),
-    ProviderNavItem(ProviderTab.EARNINGS, "Earnings", Icons.Default.AttachMoney),
+    ProviderNavItem(ProviderTab.EARNINGS, "Earnings", Icons.Default.AccountBalanceWallet),
     ProviderNavItem(ProviderTab.PROFILE, "Profile", Icons.Default.Person),
 )
 
@@ -45,22 +42,17 @@ fun ProviderMainScreen(
 
     Scaffold(
         bottomBar = {
-            NavigationBar {
-                providerNavItems.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentRoute == item.route,
-                        onClick = {
-                            navController.navigate(item.route) {
-                                popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = { Icon(item.icon, contentDescription = item.label) },
-                        label = { Text(item.label) },
-                    )
-                }
-            }
+            AssistoBottomNavBar(
+                items = providerNavItems.map { BottomNavEntry(it.route, it.label, it.icon) },
+                currentRoute = currentRoute,
+                onSelect = { route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+            )
         },
     ) { padding ->
         NavHost(
